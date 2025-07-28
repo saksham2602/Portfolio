@@ -7,6 +7,7 @@ export function CursorFollower() {
   const [isClicking, setIsClicking] = useState(false);
   const [isTabActive, setIsTabActive] = useState(true);
   const [isInWindow, setIsInWindow] = useState(true);
+  const [isMobile, setIsMobile] = useState(false);
   const cursorX = useMotionValue(-100);
   const cursorY = useMotionValue(-100);
 
@@ -15,7 +16,28 @@ export function CursorFollower() {
   const cursorXSpring = useSpring(cursorX, springConfig);
   const cursorYSpring = useSpring(cursorY, springConfig);
 
+  // Check if device is mobile
   useEffect(() => {
+    const checkMobile = () => {
+      const mobile = window.innerWidth < 768 || 
+                   'ontouchstart' in window || 
+                   navigator.maxTouchPoints > 0;
+      setIsMobile(mobile);
+      if (mobile) {
+        setIsVisible(false);
+      }
+    };
+
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  useEffect(() => {
+    // Don't set up cursor events on mobile
+    if (isMobile) return;
+
     const moveCursor = (e: MouseEvent) => {
       cursorX.set(e.clientX - 2);
       cursorY.set(e.clientY - 2);
@@ -71,15 +93,12 @@ export function CursorFollower() {
       });
       document.removeEventListener('visibilitychange', handleVisibility);
     };
-  }, [cursorX, cursorY]);
+  }, [cursorX, cursorY, isMobile]);
 
-  // Hide cursor on mobile devices
-  useEffect(() => {
-    const isMobile = window.innerWidth < 768;
-    if (isMobile) {
-      setIsVisible(false);
-    }
-  }, []);
+  // Don't render cursor on mobile
+  if (isMobile) {
+    return null;
+  }
 
   return (
     <motion.div

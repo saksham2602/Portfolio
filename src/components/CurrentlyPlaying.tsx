@@ -100,7 +100,7 @@ const CurrentlyPlaying = () => {
               whileInView={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8, delay: 0.5, ease: "easeOut" }}
               viewport={{ once: true }}
-              className="flex flex-col items-center h-full mt-40 lg:mt-0"
+              className="flex flex-col items-center h-full mt-60 sm:mt-40 lg:mt-0"
             >
               <div className="text-center mb-6 lg:mb-8 w-full max-w-md mx-auto flex-shrink-0">
                 <h3 className="text-xl md:text-2xl lg:text-3xl font-bold text-white mb-2">
