@@ -61,7 +61,6 @@ function AppContent() {
           colorStops={isDark ? ["#3A29FF", "#FF94B4", "#FF3232"] : ["#6366F1", "#8B5CF6", "#EC4899"]}
           blend={0.5}
           amplitude={isDark ? 1.0 : 0.6}
-          speed={0.5}
           isDark={isDark}
         />
       </div>

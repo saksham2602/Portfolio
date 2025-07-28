@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Button } from './ui/button';
 import { ProfileModal } from './ProfileModal';
 import { ThemeToggle } from './ThemeToggle';
 

@@ -1,4 +1,3 @@
-import React from 'react';
 import { motion } from 'framer-motion';
 import SpotifyCard from './SpotifyCard';
 import DailyWorkCard from './DailyWorkCard';
