@@ -19,7 +19,7 @@ function AppContent() {
   const [isLoading, setIsLoading] = useState(true);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // Initialize Lenis smooth scrolling
+  // Initialize Lenis smooth scrolling with desktop optimizations
   useEffect(() => {
     if (isLoading) return;
 
@@ -31,6 +31,8 @@ function AppContent() {
       smoothWheel: true,
       wheelMultiplier: 1,
       touchMultiplier: 2,
+      infinite: false,
+      lerp: 0.05, // Optimized lerp for smoother desktop scrolling
     });
 
     function raf(time: number) {
@@ -99,7 +101,7 @@ function AppContent() {
         transition={{ delay: 1.2, type: "spring", stiffness: 200 }}
       >
         <motion.button
-          className="w-14 h-14 bg-gradient-to-r from-primary to-accent rounded-full shadow-lg flex items-center justify-center text-white"
+          className="w-14 h-14 bg-gradient-to-r from-primary to-accent rounded-full shadow-lg flex items-center justify-center text-white animate-gpu"
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.9 }}
           onClick={() => {

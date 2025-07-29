@@ -1,5 +1,5 @@
 import { Renderer, Program, Mesh, Color, Triangle } from "ogl";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import './Aurora.css';
 
@@ -125,6 +125,19 @@ export default function Aurora(props: AuroraProps) {
   } = props;
   const propsRef = useRef(props);
   propsRef.current = props;
+  const [isLowEnd, setIsLowEnd] = useState(false);
+
+  // Lightweight low-end device detection
+  useEffect(() => {
+    const checkLowEnd = () => {
+      const hardwareConcurrency = navigator.hardwareConcurrency || 4;
+      const memory = (navigator as any).deviceMemory || 4;
+      const isLowEndDevice = hardwareConcurrency < 4 || memory < 4;
+      setIsLowEnd(isLowEndDevice);
+    };
+
+    checkLowEnd();
+  }, []);
 
   const ctnDom = useRef<HTMLDivElement>(null);
 
@@ -132,10 +145,16 @@ export default function Aurora(props: AuroraProps) {
     const ctn = ctnDom.current;
     if (!ctn) return;
 
+    // Skip WebGL on very low-end devices
+    if (isLowEnd) {
+      return;
+    }
+
     const renderer = new Renderer({
       alpha: true,
       premultipliedAlpha: true,
-      antialias: true
+      antialias: true,
+      powerPreference: "high-performance" // Desktop optimization
     });
     const gl = renderer.gl;
     gl.clearColor(0, 0, 0, 0);
@@ -185,7 +204,7 @@ export default function Aurora(props: AuroraProps) {
     const update = (t: number) => {
       animateId = requestAnimationFrame(update);
       const currentTime = t * 0.01;
-      const currentSpeed = 1.0;
+      const currentSpeed = 1.0; // Optimized for desktop
       program.uniforms.uTime.value = currentTime * currentSpeed * 0.1;
       program.uniforms.uAmplitude.value = propsRef.current.amplitude ?? 1.0;
       program.uniforms.uBlend.value = propsRef.current.blend ?? blend;
@@ -209,7 +228,21 @@ export default function Aurora(props: AuroraProps) {
       gl.getExtension("WEBGL_lose_context")?.loseContext();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [amplitude, isDark]);
+  }, [amplitude, isDark, isLowEnd]);
+
+  // CSS fallback for low-end devices
+  if (isLowEnd) {
+    return (
+      <div 
+        className="aurora-container"
+        style={{
+          background: `linear-gradient(45deg, ${colorStops[0]}, ${colorStops[1]}, ${colorStops[2]})`,
+          opacity: 0.3,
+          animation: 'aurora-fallback 10s ease-in-out infinite'
+        }}
+      />
+    );
+  }
 
   return <div ref={ctnDom} className="aurora-container" />;
 } 

@@ -200,6 +200,41 @@ html {
   font-size: var(--font-size);
   scroll-behavior: smooth;
   cursor: none;
+  /* Desktop performance optimizations */
+  will-change: scroll-position;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* Performance optimizations for smooth animations */
+* {
+  box-sizing: border-box;
+}
+
+/* Hardware acceleration for animations */
+.animate-gpu {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  
+  .aurora-text,
+  .moving-gradient-text,
+  .aurora-silver-white-text {
+    animation: none !important;
+  }
 }
 
 /* Hide default cursor on desktop */
@@ -238,6 +273,7 @@ textarea:focus-visible {
   color: transparent;
   -webkit-text-fill-color: transparent;
   animation: aurora-gradient 6s ease-in-out infinite;
+  will-change: background-position;
 }
 
 @keyframes moving-gradient {
@@ -255,6 +291,7 @@ textarea:focus-visible {
 .moving-gradient-text {
   background-size: 200% 200%;
   animation: moving-gradient 6s ease-in-out infinite;
+  will-change: background-position;
 }
 
 @keyframes aurora-breathing {
@@ -303,4 +340,21 @@ textarea:focus-visible {
   -webkit-text-fill-color: transparent;
   animation: aurora-breathing 20s ease-in-out infinite;
   position: relative;
+  will-change: background-position, filter;
+}
+
+/* CSS fallback animation for low-end devices */
+@keyframes aurora-fallback {
+  0% {
+    opacity: 0.2;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.4;
+    transform: scale(1.02);
+  }
+  100% {
+    opacity: 0.2;
+    transform: scale(1);
+  }
 }

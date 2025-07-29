@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback, useMemo } from 'react';
 import { motion, useMotionValue, useSpring } from 'framer-motion';
 
 export function CursorFollower() {
@@ -7,43 +7,36 @@ export function CursorFollower() {
   const [isClicking, setIsClicking] = useState(false);
   const [isTabActive, setIsTabActive] = useState(true);
   const [isInWindow, setIsInWindow] = useState(true);
-  const [isMobile, setIsMobile] = useState(false);
   const cursorX = useMotionValue(-100);
   const cursorY = useMotionValue(-100);
 
-  // Less jittery: higher damping, lower stiffness
-  const springConfig = { damping: 40, stiffness: 350 };
+  // Optimized spring config for smoother desktop movement
+  const springConfig = useMemo(() => ({ 
+    damping: 25, 
+    stiffness: 200,
+    mass: 0.5
+  }), []);
+  
   const cursorXSpring = useSpring(cursorX, springConfig);
   const cursorYSpring = useSpring(cursorY, springConfig);
 
-  // Check if device is mobile
-  useEffect(() => {
-    const checkMobile = () => {
-      const mobile = window.innerWidth < 768 || 
-                   'ontouchstart' in window || 
-                   navigator.maxTouchPoints > 0;
-      setIsMobile(mobile);
-      if (mobile) {
-        setIsVisible(false);
+  // Throttled mouse move handler for better desktop performance
+  const throttledMouseMove = useCallback((() => {
+    let ticking = false;
+    return (e: MouseEvent) => {
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          cursorX.set(e.clientX - 2);
+          cursorY.set(e.clientY - 2);
+          setIsVisible(true);
+          ticking = false;
+        });
+        ticking = true;
       }
     };
-
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    
-    return () => window.removeEventListener('resize', checkMobile);
-  }, []);
+  })(), [cursorX, cursorY]);
 
   useEffect(() => {
-    // Don't set up cursor events on mobile
-    if (isMobile) return;
-
-    const moveCursor = (e: MouseEvent) => {
-      cursorX.set(e.clientX - 2);
-      cursorY.set(e.clientY - 2);
-      setIsVisible(true);
-    };
-
     const handleMouseEnter = () => setIsHovering(true);
     const handleMouseLeave = () => setIsHovering(false);
     const handleMouseDown = () => setIsClicking(true);
@@ -63,7 +56,7 @@ export function CursorFollower() {
       el.addEventListener('mouseup', handleMouseUp);
     });
 
-    window.addEventListener('mousemove', moveCursor);
+    window.addEventListener('mousemove', throttledMouseMove);
     window.addEventListener('mousedown', handleMouseDown);
     window.addEventListener('mouseup', handleMouseUp);
     window.addEventListener('mouseleave', handleSiteMouseLeave);
@@ -78,7 +71,7 @@ export function CursorFollower() {
     document.addEventListener('visibilitychange', handleVisibility);
 
     return () => {
-      window.removeEventListener('mousemove', moveCursor);
+      window.removeEventListener('mousemove', throttledMouseMove);
       window.removeEventListener('mousedown', handleMouseDown);
       window.removeEventListener('mouseup', handleMouseUp);
       window.removeEventListener('mouseleave', handleSiteMouseLeave);
@@ -93,16 +86,11 @@ export function CursorFollower() {
       });
       document.removeEventListener('visibilitychange', handleVisibility);
     };
-  }, [cursorX, cursorY, isMobile]);
-
-  // Don't render cursor on mobile
-  if (isMobile) {
-    return null;
-  }
+  }, [cursorX, cursorY, throttledMouseMove]);
 
   return (
     <motion.div
-      className="fixed top-0 left-0 w-5 h-5 pointer-events-none z-[9999]"
+      className="fixed top-0 left-0 w-5 h-5 pointer-events-none z-[9999] animate-gpu"
       style={{
         x: cursorXSpring,
         y: cursorYSpring,
@@ -112,15 +100,16 @@ export function CursorFollower() {
         opacity: isVisible && isTabActive && isInWindow ? 1 : 0,
       }}
       transition={{
-        opacity: { duration: 0.2 },
-        scale: { duration: 0.15 },
+        opacity: { duration: 0.15 },
+        scale: { duration: 0.1, ease: "easeOut" },
       }}
     >
-      {/* Arrow cursor (always arrow, just scales up on hover) */}
+      {/* Optimized SVG cursor for desktop */}
       <svg
         viewBox="0 0 24 24"
         fill="none"
         className="w-full h-full drop-shadow-lg absolute inset-0"
+        style={{ willChange: 'transform' }}
       >
         {/* Arrow shadow/outline */}
         <path

@@ -88,10 +88,10 @@ export function Hero() {
           {/* Name Section */}
           <motion.div variants={nameVariants} className="mb-8">
             <h1 className="text-6xl md:text-8xl lg:text-9xl">
-              <span className="inline-block aurora-silver-white-text">
+              <span className="inline-block aurora-silver-white-text animate-gpu">
                 Saksham
               </span>
-              <span className="inline-block ml-4 aurora-silver-white-text">
+              <span className="inline-block ml-4 aurora-silver-white-text animate-gpu">
                 Bhatia
               </span>
             </h1>
@@ -122,7 +122,7 @@ export function Hero() {
             <MagneticButton 
               variant="outline"
               size="lg" 
-              className="relative overflow-hidden group bg-black/10 hover:bg-black/20 dark:bg-white/10 dark:hover:bg-white/20 border-0"
+              className="relative overflow-hidden group bg-black/10 hover:bg-black/20 dark:bg-white/10 dark:hover:bg-white/20 border-0 animate-gpu"
               onClick={() => scrollToSection('#projects')}
               magneticStrength={0.4}
             >
@@ -132,7 +132,7 @@ export function Hero() {
             <MagneticButton 
               variant="outline" 
               size="lg"
-              className="group bg-black/10 hover:bg-black/20 dark:bg-white/10 dark:hover:bg-white/20 border-0"
+              className="group bg-black/10 hover:bg-black/20 dark:bg-white/10 dark:hover:bg-white/20 border-0 animate-gpu"
               onClick={() => scrollToSection('#contact')}
               magneticStrength={0.3}
             >
@@ -151,7 +151,7 @@ export function Hero() {
               <motion.a
                 key={index}
                 href={social.href}
-                className={`p-3 rounded-full bg-black/10 hover:bg-black/20 dark:bg-white/10 dark:hover:bg-white/20 transition-all duration-300 ${social.color} group border-0`}
+                className={`p-3 rounded-full bg-black/10 hover:bg-black/20 dark:bg-white/10 dark:hover:bg-white/20 transition-all duration-300 ${social.color} group border-0 animate-gpu`}
                 whileHover={{ 
                   scale: 1.1,
                   y: -2
@@ -167,7 +167,7 @@ export function Hero() {
           <motion.div variants={itemVariants}>
             <motion.button
               onClick={() => scrollToSection('#about')}
-              className="p-2 rounded-full bg-black/5 dark:bg-white/5 backdrop-blur-sm border-0 hover:bg-black/10 dark:hover:bg-white/10 transition-all duration-300"
+              className="p-2 rounded-full bg-black/5 dark:bg-white/5 backdrop-blur-sm border-0 hover:bg-black/10 dark:hover:bg-white/10 transition-all duration-300 animate-gpu"
               whileHover={{ scale: 1.05, y: -2 }}
               whileTap={{ scale: 0.95 }}
             >
