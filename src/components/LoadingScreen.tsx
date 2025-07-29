@@ -62,10 +62,6 @@ export function LoadingScreen({ onLoadingComplete }: LoadingScreenProps) {
     return () => clearInterval(interval);
   }, [currentStep, onLoadingComplete]);
 
-  const hardwareConcurrency = navigator.hardwareConcurrency || 4;
-  const memory = navigator.deviceMemory || 4;
-  const isLowEndDevice = hardwareConcurrency < 4 || memory < 4;
-
   return (
     <AnimatePresence>
       <motion.div
