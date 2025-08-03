@@ -29,7 +29,7 @@ export default function FloatingDockDemo() {
       icon: (
         <IconBrandLinkedin className="h-full w-full text-neutral-500 dark:text-neutral-300" />
       ),
-      href: "https://www.linkedin.com/in/saksham-bhatia-932aba25a/",
+      href: "https://www.linkedin.com/in/saksham-b-932aba25a/",
     },
     {
       title: "GitHub",
