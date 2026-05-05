@@ -136,7 +136,7 @@ This project is open source and available under the [MIT License](LICENSE).
 ## 📞 Contact
 
 - **GitHub**: [@saksham2602](https://github.com/saksham2602)
-- **LinkedIn**: [Saksham Bhatia](https://www.linkedin.com/in/saksham-bhatia-932aba25a/)
+- **LinkedIn**: [Saksham Bhatia](https://www.linkedin.com/in/saksham-b-932aba25a/)
 - **Email**: bhatiasaksham26@gmail.com
 
 ---
